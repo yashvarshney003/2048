@@ -46,41 +46,51 @@
 				/* display :flex;
 				flex-wrap: wrap; */
 			}
-			.status {
-				position:relative;
+			
+
+			.game-status{
+				display:block;
+			}
+			.status{
+				display: block;
 			}
 			.num 
 			{
 				position:relative;
 				float:left;
 			}
-			.btn1
-			{
-				background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  width:70%;
-  
-  text-align: center;
-  text-decoration: none;
-  
-  font-size: 16px;
-			}
-			.cell { 
-				font-size:30px;
-				transition: background-color 300ms linear,
-			   color 300ms linear;
-				}
-				.undo 
-				{
-					width:100%;
-				}
-				@media (max-width:500px) {
-					html, body {margin: 0; height: 100%; overflow: hidden}
-					.s1
-					{overflow: hidden;
-						height:100vh;
+		.btn1{
+			background-color: #4CAF50; /* Green */
+			border: none;
+			color: white;
+			width:70%;
+			text-align: center;
+			text-decoration: none;
+			font-size: 16px;
 					}
-					
-				}
-				
+
+
+		.cell{ 
+				font-size:30px;
+				transition: background-color 300ms linear,color 300ms linear;
+		}
+
+
+
+		.undo {
+				width:100%;
+		}
+
+
+
+		@media (max-width:500px) {
+			html, body {
+				margin: 0; height: 100%; overflow: hidden
+			}
+
+			.s1{	
+				overflow: hidden;
+				height:100vh;
+				}			
+		}
+						
