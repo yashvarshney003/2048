@@ -2,6 +2,7 @@
 				margin:0;
 				padding:0;
 				box-sizing: border-box;
+				overflow: hidden;
 			}
 			
 			.s1 
@@ -73,5 +74,13 @@
 				.undo 
 				{
 					width:100%;
+				}
+				@media (max-width:500px) {
+					html, body {margin: 0; height: 100%; overflow: hidden}
+					.s1
+					{overflow: hidden;
+						height:100vh;
+					}
+					
 				}
 				
