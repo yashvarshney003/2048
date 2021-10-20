@@ -1,6 +1,8 @@
 console.log("script js impoted");
-// varibale for touch event 
-var startingX,startingY,movingX,movingY;
+// varibale for holding values for touch events
+var startingX, startingY, movingX, movingY;
+
+const change_background_color = new Event("change_background_color"); // manual event
 
 var score = 0; // Global variable for holding the final score made by contestant
 
@@ -11,12 +13,13 @@ var stack = []; // stack to store previous 10 states.
 var grid = document.querySelectorAll('.cell');// imported all div cell having class name cell.It is array of div
 // this object maintain value to color
 
-var game_status = document.getElementById("game_status"); // variable to hold h1 element to  show win and loose
+const game_status = document.getElementById("game_status"); // This variable hold the reference of h1 element where we display win or Loose.
+
 
 
 // Mapping from integer to color.
 
-var color_map = {
+const color_map = {
 	0: "rgb(205,193,180)",
 	2: "#EEE4DA",
 	4: "#EEE1C9",
@@ -26,15 +29,17 @@ var color_map = {
 	64: "#F75F3B",
 	128: "#EDD073",
 	256: "#5c094f",
-	512: "#ff3747e",
-	1024: "#1652b5",
-	2048: "#c652b5"
+	512: "#EDC850",
+	1024: "#EDC53F",
+	2048: "#EDC22D"
 }
 
 
 var box = new Array(4); // 2048 grid
 
-var empty = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // Using this array we successfully insert 2 radomly available spaces
+// This is a list which hold box places which are available to display new 2
+//  empty is  used by function place_2, update_empty(), 
+var empty = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 const num_of_cell = 15;// total number of cell in a game
 
@@ -56,7 +61,7 @@ function logKey(e) {
 		case 40: down();
 			break;
 		default:
-		console.log("Wrong key pressed");
+			console.log("Wrong key pressed");
 	}
 }
 
@@ -70,7 +75,6 @@ for (let i = 0; i <= 3; i++) {
 	for (let j = 0; j <= 3; j++) {
 		grid[current_cell].innerText = 0;
 		box[i].push(grid[current_cell]);
-		change_state(i, j);
 		current_cell += 1;
 	}
 }
@@ -90,7 +94,7 @@ function place_2() {
 	x1 = parseInt(empty[place] / 4); // will give row at which we will insert 2
 	y1 = empty[place] % 4;; // will give col
 	box[x1][y1].innerText = 2;
-	change_state(x1, y1); // placing 2
+	function_change_background_color(x1, y1); // placing 2
 }
 
 
@@ -99,7 +103,7 @@ function place_2() {
 
 
 function right() {
-	
+
 	if (check_game_status()) {
 		save_last_status();
 		let changed = false;
@@ -123,8 +127,8 @@ function right() {
 							update_score(2 * parseInt(box[i][current_column].innerText));
 							box[i][current_column].innerText = 0;
 
-							change_state(i, current_column);
-							change_state(i, current_column + 1);
+							function_change_background_color(i, current_column);
+							function_change_background_color(i, current_column + 1);
 
 							range -= 1;
 							break;
@@ -133,8 +137,8 @@ function right() {
 							changed = true;
 							box[i][current_column + 1].innerText = parseInt(box[i][current_column].innerText);
 							box[i][current_column].innerText = 0;
-							change_state(i, current_column);
-							change_state(i, current_column + 1);
+							function_change_background_color(i, current_column);
+							function_change_background_color(i, current_column + 1);
 						}
 						current_column += 1;
 					}
@@ -154,17 +158,17 @@ function right() {
 
 
 function left() {
-	
+
 	if (check_game_status()) {
 		save_last_status();
 		let changed = false;
 		for (let i = 0; i < 4; i++) {
-			
+
 			let range = 0;
 
-			
+
 			for (let j = 1; j < 4; j++) {
-				
+
 
 				let current_column = j;
 				let change = false;
@@ -172,13 +176,13 @@ function left() {
 					while (current_column > range) {
 
 						if (parseInt(box[i][current_column - 1].innerText) != 0 && (parseInt(box[i][current_column - 1].innerText) == parseInt(box[i][current_column].innerText))) {
-							
+
 							changed = true;
 							box[i][current_column - 1].innerText = 2 * parseInt(box[i][current_column - 1].innerText);
 							update_score(2 * parseInt(box[i][current_column].innerText));
 							box[i][current_column].innerText = 0;
-							change_state(i, current_column);
-							change_state(i, current_column - 1);
+							function_change_background_color(i, current_column);
+							function_change_background_color(i, current_column - 1);
 
 							range += 1;
 							break;
@@ -187,8 +191,8 @@ function left() {
 							changed = true;
 							box[i][current_column - 1].innerText = parseInt(box[i][current_column].innerText);
 							box[i][current_column].innerText = 0;
-							change_state(i, current_column);
-							change_state(i, current_column - 1);
+							function_change_background_color(i, current_column);
+							function_change_background_color(i, current_column - 1);
 						}
 						current_column -= 1;
 					}
@@ -211,16 +215,16 @@ function left() {
 
 function up() {
 
-	
+
 	if (check_game_status()) {
 		save_last_status();
 		let changed = false;
 		for (let j = 0; j < 4; j++) {
-			
+
 			let range = 0;
-			
+
 			for (let i = 1; i < 4; i++) {
-				
+
 
 				let current_row = i;
 				let change = false;
@@ -228,13 +232,13 @@ function up() {
 					while (current_row > range) {
 
 						if (parseInt(box[current_row - 1][j].innerText) != 0 && (parseInt(box[current_row - 1][j].innerText) == parseInt(box[current_row][j].innerText))) {
-							
+
 							changed = true;
 							box[current_row - 1][j].innerText = 2 * parseInt(box[current_row - 1][j].innerText);
 							update_score(2 * parseInt(box[current_row][j].innerText));
 							box[current_row][j].innerText = 0;
-							change_state(current_row, j);
-							change_state(current_row - 1, j);
+							function_change_background_color(current_row, j);
+							function_change_background_color(current_row - 1, j);
 
 							range += 1;
 							break;
@@ -243,8 +247,8 @@ function up() {
 							changed = true;
 							box[current_row - 1][j].innerText = parseInt(box[current_row][j].innerText);
 							box[current_row][j].innerText = 0;
-							change_state(current_row, j);
-							change_state(current_row - 1, j);
+							function_change_background_color(current_row, j);
+							function_change_background_color(current_row - 1, j);
 						}
 						current_row -= 1;
 					}
@@ -268,11 +272,11 @@ function down() {
 		save_last_status();
 		let changed = false;
 		for (let j = 0; j < 4; j++) {
-		
+
 			let range = 3;
-			
+
 			for (let i = 2; i >= 0; i--) {
-				
+
 
 				let current_row = i;
 				let change = false;
@@ -280,13 +284,13 @@ function down() {
 					while (current_row < range) {
 
 						if (parseInt(box[current_row + 1][j].innerText) != 0 && (parseInt(box[current_row + 1][j].innerText) == parseInt(box[current_row][j].innerText))) {
-							//console.log("right called4");
+						
 							changed = true;
 							box[current_row + 1][j].innerText = 2 * parseInt(box[current_row][j].innerText);
 							update_score(2 * parseInt(box[current_row][j].innerText));
 							box[current_row][j].innerText = 0;
-							change_state(current_row, j);
-							change_state(current_row + 1, j);
+							function_change_background_color(current_row, j);
+							function_change_background_color(current_row + 1, j);
 
 							range -= 1;
 							break;
@@ -295,8 +299,8 @@ function down() {
 							changed = true;
 							box[current_row + 1][j].innerText = parseInt(box[current_row][j].innerText);
 							box[current_row][j].innerText = 0;
-							change_state(current_row, j);
-							change_state(current_row + 1, j);
+							function_change_background_color(current_row, j);
+							function_change_background_color(current_row + 1, j);
 						}
 						current_row += 1;
 					}
@@ -310,24 +314,26 @@ function down() {
 			place_2();
 		}
 	}
-	
+
 }
 
-// This function will update the global empty array which hold places which are available to place new 2
+// Input: Copy of 2D array of original 2048.
+// function: It updates the empty array if particular box is empty then push back it in empty array and if is not then remove it from empty array
+
 
 function update_empty(arr) {
-	
+
 	for (let j = 0; j < 4; j++) {
 		for (let i = 0; i < 4; i++) {
-			
-			if (parseInt(arr[j][i].innerText) != 0) {
-				if (empty.includes((j * 4) + i)) {
-					empty.splice(empty.indexOf((j * 4) + i), 1);
+
+			if (parseInt(arr[j][i].innerText) != 0) {// If innner text is not equal to zero
+				if (empty.includes((j * 4) + i)) { // If it is present in empty array then remove it
+					empty.splice(empty.indexOf((j * 4) + i), 1); // find index of place then remove it using splice function
 				}
 
 			}
 			else {
-				if (!empty.includes((j * 4) + i)) {
+				if (!empty.includes((j * 4) + i)) {// if it zero and  it is not present in empty array push it back.
 					empty.push((j * 4) + i);
 				}
 
@@ -335,21 +341,24 @@ function update_empty(arr) {
 		}
 
 	}
+
 }
 
 
-// change background-color of div according the value inside div 
+// Input: ith row and jth col of 2d grid(2048)
+// Change the background color of div background according to innerText
+//
 
-function change_state(i, j) {
-	
-	const event1 = new Event("change");
-	box[i][j].addEventListener('change', (e) => {
+function function_change_background_color(i, j) {
+
+	// 
+	box[i][j].addEventListener('change_background_color', (e) => {
 
 
-		box[i][j].style.backgroundColor = color_map[parseInt(box[i][j].innerText)];
+		box[i][j].style.backgroundColor = color_map[parseInt(box[i][j].innerText)]; // changing the background color using DOM api
 
 	});
-	box[i][j].dispatchEvent(event1);
+	box[i][j].dispatchEvent(change_background_color); // Dispatch event 
 
 
 
@@ -360,7 +369,8 @@ function change_state(i, j) {
 
 
 
-// This function update the score
+// Input: Integer value which is added to the current score value.
+// Input can be negative and positive also.
 
 
 function update_score(num) {
@@ -371,7 +381,7 @@ function update_score(num) {
 }
 
 // This function will check for win and loose return accordingly
-
+// if any div inner text is equal to 2048 then display win and if any further move is not possible then show loose
 function check_game_status() {
 
 
@@ -379,12 +389,13 @@ function check_game_status() {
 	for (let i = 0; i < 4; i++) {
 		for (let j = 0; j < 4; j++) {
 			if (parseInt(box[i][j].innerText) == 2048) {
-				game_status.style.display = "block";
-				game_status.innerText = "You Win";
-				return true;
+				game_status.style.display = "block"; // change display to block to show 
+				game_status.innerText = "You Win"; // change text
+				return true; // returning true because further move is possible
 			}
 			else {
-
+				// if ant div inner text is equal to 0  or any neighbour div inner text is equal then further move are possibke
+				// check in all four direction	
 				if (parseInt(box[i][j].innerText) == 0) {
 					return true;
 				}
@@ -422,6 +433,7 @@ function check_game_status() {
 			}
 		}
 	}
+	// if any further move is not possible then user lost the game change the status accordingly.
 	game_status.style.display = "block";
 	game_status.innerText = "You Loose";
 
@@ -429,16 +441,22 @@ function check_game_status() {
 }
 
 
+// It store the current state before any move.
 
 function save_last_status() {
+	// If stack size is greater than 10 remove the first
 	if (stack.length > 10) {
 		let garbage = stack.shift();
 	}
+
 	let ele = {
 		"configuration": last_state,
 		"score": score
 	};
+	// push into the stack
 	stack.push(ele);
+
+	// Redefining array and storing current state into variable last_state
 	last_state = new Array(4);
 	for (let i = 0; i < 4; i++) {
 		last_state[i] = [];
@@ -452,50 +470,51 @@ function save_last_status() {
 
 function undo() {
 
-	game_status.style.display = "none";
+	game_status.style.display = "none"; // if game_status is visible make univisible 
+	// Now store the last_state into box configuartion(2048 grid)
 	if (stack.length > 0) {
 		for (let i = 0; i < 4; i++) {
 
 			for (let j = 0; j < 4; j++) {
 				box[i][j].innerText = last_state[i][j];
-				change_state(i, j);
+				function_change_background_color(i, j);
 
 			}
 		}
-		let popped_element = stack.pop();
-		last_state = popped_element.configuration;
-		let change = popped_element.score;
-		update_score(-1 * (score - change));
+		let popped_element = stack.pop(); //Now pop second last configuartion  and store in last_state
+		last_state = popped_element.configuration; // Assigning value to last state
+		let change = popped_element.score; // updating score variable in JS
+		update_score(-1 * (score - change)); // Updating score on front end
 
 	}
 }
 
-function touchstart(evt) 
- {
-	// console.log("evt.touches");
-	  startingX = evt.touches[0].clientX;
-	  startingY =evt.touches[0].clientY;
-	//  console.log(startingX,startingY);
 
- }
+function touchstart(evt) {
+
+	startingX = evt.touches[0].clientX;
+	startingY = evt.touches[0].clientY;
+
+}
+
+
 function touchmoving(evt) {
 	movingX = evt.touches[0].clientX;
 	movingY = evt.touches[0].clientY;
 }
+
+
 function touchend(evt) {
-	if(startingX+100<movingX) 
-	     {
-			 right();
-		 }
-	else if (startingX - 100 > movingX)
-	 {
-		 left();
-	 }
-	 else if(startingY + 100 < movingY)
-	 {
-		 down();
-	 }
-	 else 
-	 up();
+	if (startingX + 100 < movingX) {
+		right();
+	}
+	else if (startingX - 100 > movingX) {
+		left();
+	}
+	else if (startingY + 100 < movingY) {
+		down();
+	}
+	else
+		up();
 }
 
