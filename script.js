@@ -2,14 +2,22 @@ console.log("script js impoted");
 // varibale for holding values for touch events
 var startingX, startingY, movingX, movingY;
 
+/** Incorrect variable naming conventions used throughout project. Learn about variable naming conventions/standards */
 const change_background_color = new Event("change_background_color"); // manual event
 
+/**
+ * It should be defined as let. A better way to use it to use a class and use methods to update it, so it's not available globally.
+ * Think what all could be included in that class.
+ * And after that it's your call whether to implement it for now or not. The future assignments will still require you to implement it.
+ */
 var score = 0; // Global variable for holding the final score made by contestant
 
 var last_state = new Array(4);// variable to store last state of game(can be removed)
 
+/** Let me know whether we should use `let` or `const` */
 var stack = []; // stack to store previous 10 states.
 
+/** For all the variables, see if youhave to use `let` or `const`. Never use `var`. */
 var grid = document.querySelectorAll('.cell');// imported all div cell having class name cell.It is array of div
 // this object maintain value to color
 
@@ -79,12 +87,17 @@ for (let i = 0; i <= 3; i++) {
 	}
 }
 
+/** Do you know what you are doing here, and why does this work? */
 // Placing first div
 place_2();
 
 
 
-
+/** Every line need not be documented. A good explanation for a function should be enough.
+ * Only complex logics and statements are required to be explained separately.
+ * 
+ * And there is incorrect variable naming convention for all the functions
+ */
 // function to generate 2 at r&&om avilable space
 function place_2() {
 	let final_range = empty.length;  // find the length of epmty array
@@ -102,6 +115,11 @@ function place_2() {
 
 
 
+/**
+ * Missing commenting. Thinkproperly what all needs to be commented.
+ * There are a lot of unnecessary empty lines.
+ * Fix for all functions.
+ */
 function right() {
 
 	if (check_game_status()) {
@@ -115,10 +133,14 @@ function right() {
 
 
 				let current_column = j;
+				/** Unused variable */
 				let change = false;
 				if (parseInt(box[i][j].innerText) != 0) {
 					while (current_column < range) {
 
+						/** Using the same reference - box[i][current_column + 1] everywhere is not good. A change in one of them would require a change in all of them.
+						 * And that is undesirable
+						 */
 						if (parseInt(box[i][current_column + 1].innerText) != 0 && (parseInt(box[i][current_column + 1].innerText) == parseInt(box[i][current_column].innerText))) {
 
 							changed = true;
@@ -133,6 +155,7 @@ function right() {
 							range -= 1;
 							break;
 						}
+						/** Is this IF statement even required? */
 						if (parseInt(box[i][current_column + 1].innerText) === 0) {
 							changed = true;
 							box[i][current_column + 1].innerText = parseInt(box[i][current_column].innerText);
@@ -156,7 +179,7 @@ function right() {
 
 }
 
-
+/** Same mistakes in this one too */
 function left() {
 
 	if (check_game_status()) {
@@ -213,6 +236,7 @@ function left() {
 
 
 
+/** Same mistakes in this one too */
 function up() {
 
 
@@ -266,6 +290,7 @@ function up() {
 
 
 
+/** Same mistakes in this one too */
 function down() {
 	// check for win or loose will return true if win and false if loose
 	if (check_game_status()) {
@@ -317,6 +342,7 @@ function down() {
 
 }
 
+/** What is this explanation for? */
 // Input: Copy of 2D array of original 2048.
 // function: It updates the empty array if particular box is empty then push back it in empty array and if is not then remove it from empty array
 
@@ -326,6 +352,7 @@ function update_empty(arr) {
 	for (let j = 0; j < 4; j++) {
 		for (let i = 0; i < 4; i++) {
 
+			/** Not the right way to use commenting. Don't comment for every line. Instead do it in one go. */
 			if (parseInt(arr[j][i].innerText) != 0) {// If innner text is not equal to zero
 				if (empty.includes((j * 4) + i)) { // If it is present in empty array then remove it
 					empty.splice(empty.indexOf((j * 4) + i), 1); // find index of place then remove it using splice function
@@ -399,6 +426,7 @@ function check_game_status() {
 				if (parseInt(box[i][j].innerText) == 0) {
 					return true;
 				}
+				/** Do you require 2 IF statements? */
 				if (i - 1 > 0) {
 					if (parseInt(box[i][j].innerText) == parseInt(box[i - 1][j].innerText)) {
 
@@ -446,6 +474,7 @@ function check_game_status() {
 function save_last_status() {
 	// If stack size is greater than 10 remove the first
 	if (stack.length > 10) {
+		/** Variable not required */
 		let garbage = stack.shift();
 	}
 
@@ -481,6 +510,7 @@ function undo() {
 
 			}
 		}
+		/** `Let` or `const`? */
 		let popped_element = stack.pop(); //Now pop second last configuartion  and store in last_state
 		last_state = popped_element.configuration; // Assigning value to last state
 		let change = popped_element.score; // updating score variable in JS
@@ -517,4 +547,5 @@ function touchend(evt) {
 	else
 		up();
 }
+/** See if you break the functions in this file into multiple files, for modularity */
 

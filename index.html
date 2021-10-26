@@ -1,6 +1,13 @@
+<!--
+	1. No indentation - It increases the speed of working within a project, as it increases readibility.
+	2. Unnecessary extra lines - These lines often signify start/end of a certain logic or dependent statements, even inside a function.
+	3. Usage of `class` even for unique elements where `id` should be used - This provides a sematic and structural view for the layout.
+	4. Much thought has not been given to variable naming (both class and id) - This can be disastarous for bigger projects
+ -->
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- why stylesheet is added at the start ? -->
 		<link rel="stylesheet" href="style.css">
 		<title> 2048</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +38,7 @@
 			</div>
 				
 				
-				
+				<!-- Incorrect variable naming convention used for the functions used in events. -->
 				<div class="parent" id="parent" ontouchstart="touchstart(event)" ontouchend="touchend(event)" ontouchmove="touchmoving(event)">
 				
 				
